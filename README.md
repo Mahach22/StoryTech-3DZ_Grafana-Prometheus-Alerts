@@ -13,7 +13,7 @@
 - [Дашбород топовых тетрадок(по размеру) юпитер ноутбуков](https://grafana.story-tech.ru/public-dashboards/58614ae327a4487aa84d6dc0192b7c2a)
   реализовано с помощью [баш скрипта](./check_volumes.sh), который записывает данные контейнеров юпитер ноутбуков. Обновление данных через крон, сбор с помощью нод экспортера, прометеуса и вывод в графану.
 - [Дашборд топовых таблиц постгрес с их владельцами](https://grafana.story-tech.ru/public-dashboards/034c81d55254466caf571622cbafd515)
-  реализация через прямое подключение постгреса в графану и запросы в постгрес.
+  реализация через прямое подключение постгреса в графану и запросы в постгрес. Также есть график с таймлайном, который берет данные с кадвизора, но кадвизор не отдает владельцев таблиц, их можно подсмотреть в соседней таблице или графике.
 
 
 ## Алерт вход по ssh
@@ -50,19 +50,29 @@ sudo chmod 600 /etc/postfix/sasl_passwd
 sudo systemctl restart postfix
 ```
 Настраиваем запуск [нашего скрипта](./ssh_alert.sh) при входе по ssh
+
+Открываем в редакторе конфиг pam ssh
 ```
 sudo nano /etc/pam.d/sshd 
 ```
+добавляем в него следующую строку
 ```
-session    required   pam_exec.so /wolf/docker/StoryTech/3-task_grafana_and_alerts/ssh_alert.sh $PAM_USER $PAM_HOST
+session    required   pam_exec.so /"путь к каталогу со скриптом"/ssh_alert.sh
 ```
-![alert_container](img/alert_ssh.png)
+Результат при авторизации по ssh на почте
 
-## Алерт использование процессора контейнерами выше 80%
-- Реализовано с помощью prometheus, alertmanager и cadvisor (p.s. почту пока настроить не удалось)
+![alert_container](img/ssh_alert.png)
+
+## Алерт использования процессора контейнерами выше 80%
+- Реализовано с помощью prometheus, alertmanager и cadvisor
 
 Настраиваем алерт в прометеусе [alert.yml](./prometheus_stack/prometheus/alert.yml)
 Настраиваем данные почты для отправки по smtp в [alertmanager](./prometheus_stack/alertmanager/alertmanager.yml.examle)
 
+результат в прометеусе
 
-![alert_container](img/alet_container_cpu_usage.png)
+![alert_container](img/alert_container_cpu_usage.png)
+
+алерт на почте
+
+![alert_container_mail](img/alert_container_cpu_usage_mail.png)
