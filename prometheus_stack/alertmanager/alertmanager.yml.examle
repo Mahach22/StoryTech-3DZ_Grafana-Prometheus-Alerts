@@ -1,0 +1,19 @@
+# alertmanager.yml
+global:
+  smtp_smarthost: '[smtp.mail.ru]:465'
+  smtp_from: 'mail@mail.ru'
+  smtp_auth_username: 'mail@mail.ru'
+  smtp_auth_password: 'your password'
+  smtp_require_tls: false   #при использовании мэйл.ру необходимо отключать данный параметр, так как тлс в мейл.ру используется иначе
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: 'email-notifications'
+
+receivers:
+- name: 'email-notifications'
+  email_configs:
+  - to: 'mahach2211@gmail.com'

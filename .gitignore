@@ -1,0 +1,7 @@
+/prometheus_stack/grafana/
+./prometheus_stack/alertmanager/alertmanager.yml
+alertmanager.yml
+*.bak
+*.log
+*.tmp
+.env

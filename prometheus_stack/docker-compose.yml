@@ -1,0 +1,104 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    container_name: prometheus
+    hostname: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - storytech_network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /tmp:/host/tmp:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - "--collector.textfile.directory=/host/tmp" # Добавил путь, где хранятся данные по volume docker
+    ports:
+      - 9100:9100
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - storytech_network
+
+  grafana:
+    image: grafana/grafana:latest
+    user: root
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - storytech_network
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    restart: unless-stopped
+    container_name: alertmgr
+    ports:
+      - "9093:9093"
+    volumes:
+      - "./alertmanager:/config"
+     # - alertmanager-data:/data
+    command: --config.file=/config/alertmanager.yml --log.level=debug
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - storytech_network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1 #образ взят с гита гугла, в докер хабе перестали обновлять
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+     # - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - storytech_network
+
+  postgres_exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    container_name: postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: ${DATA_SOURCE_NAME}
+    ports:
+      - "9187:9187"
+    networks:
+      - storytech_network
+    restart: unless-stopped
+
+
+networks:
+    storytech_network:
+      name: storytech_network
+
