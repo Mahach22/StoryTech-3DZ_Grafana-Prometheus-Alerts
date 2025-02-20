@@ -1,0 +1,40 @@
+#prometheus.yml
+global:
+  scrape_interval: 30s
+
+rule_files:
+  - alert.yml
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "alertmanager:9093"
+
+scrape_configs:
+#метрики хоста
+  - job_name: node
+    scrape_interval: 5s
+    static_configs:
+    - targets: ['node-exporter:9100']
+#юпитерхаб
+  - job_name: 'jupyterhub'
+    metrics_path: '/hub/metrics'
+    static_configs:
+      - targets: ['jupyterhub:8000']
+
+#экспортер для контейнеров докер
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  - job_name: docker
+    static_configs:
+      - targets: ["192.168.1.53:9323"]
+#postgres exporter
+  - job_name: postgres
+    static_configs:
+      - targets: ['postgres_exporter:9187']
+
+
+
