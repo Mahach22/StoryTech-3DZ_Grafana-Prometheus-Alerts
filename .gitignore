@@ -3,4 +3,4 @@ alertmanager.yml
 *.bak
 *.log
 *.tmp
-.env
+*.env
