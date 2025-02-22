@@ -1,0 +1,15 @@
+services:
+  notebook-metrics-exporter:
+    build: .
+    container_name: notebook-metrics-exporter
+    ports:
+      - "9188:9188"  # Порт, который будет открыт для Prometheus
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Для взаимодействия с Docker API
+    restart: always
+    networks:
+      - storytech_network
+
+networks:
+    storytech_network:
+      name: storytech_network

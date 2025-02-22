@@ -36,5 +36,9 @@ scrape_configs:
     static_configs:
       - targets: ['postgres_exporter:9187']
 
+  - job_name: notebook-metrics-exporter
+    static_configs:
+      - targets: ['notebook-metrics-exporter:9188']
+
 
 
