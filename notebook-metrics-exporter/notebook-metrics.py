@@ -40,7 +40,7 @@ def collect_metrics():
     # Получаем список всех запущенных контейнеров
     containers = client.containers.list()
 
-    # Фильтруем контейнеры по образу 'pattern_notebook'
+    # Фильтруем контейнеры по образу storytech-jupyter-notebook
     container_with_notebook = [x for x in containers if 'storytech-jupyter-notebook' in x.attrs['Config']['Image']]
 
     for cont in container_with_notebook:
