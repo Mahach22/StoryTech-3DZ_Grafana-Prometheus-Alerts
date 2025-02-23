@@ -19,16 +19,26 @@
 ## Мониторинг
 ### Дашборд активности пользователей JupyterHub
 
-- [Ссылка на дашборд](https://grafana.story-tech.ru/public-dashboards/68f835b78d6848d5bde2eda44bf77863)
-  Дашборд отслеживает количество операций пользователей в JupyterHub в день, анализирует активность, распределение нагрузки и тренды использования. Реализация через прямой сбор метрик с JupyterHub Prometheus.
+- [Ссылка на публичный дашборд](https://grafana.story-tech.ru/public-dashboards/68f835b78d6848d5bde2eda44bf77863)
+
+  Дашборд отслеживает количество операций пользователей в JupyterHub через post запросы, анализирует активность запущенных серверов и учетных записей. Реализация через прямой сбор метрик из JupyterHub в Prometheus.
+
+![jupyter_user_activity](img/jupyter_user_activity.png)
 
 ### Дашборд топовых тетрадок Jupyter
-- [Ссылка на дашборд](https://grafana.story-tech.ru/public-dashboards/58614ae327a4487aa84d6dc0192b7c2a)
+- [Ссылка на публичный дашборд](https://grafana.story-tech.ru/public-dashboards/58614ae327a4487aa84d6dc0192b7c2a)
+
   Реализовано с помощью [bash-скрипта](./check_volumes.sh), который записывает объем занимаемого дискового пространства тетрадками Jupyter ноутбуков. Данные обновляются каждые 10 минут через cron, собираются с помощью node-exporter, Prometheus и отображаются в Grafana.
 
+![jupyter_top_notebooks](img/jupyter_top_notebooks.png)
+
 ### Дашборд топовых таблиц PostgreSQL
-- [Ссылка на дашборд](https://grafana.story-tech.ru/public-dashboards/034c81d55254466caf571622cbafd515)
+- [Ссылка на публичный дашборд](https://grafana.story-tech.ru/public-dashboards/034c81d55254466caf571622cbafd515)
+
   Реализация через прямое подключение PostgreSQL в Grafana и SQL-запросы. Также есть график с таймлайном, который берет данные с cAdvisor, но cAdvisor не отдает владельцев таблиц, их можно подсмотреть в соседней таблице или графике.
+
+![postgres_top_tables](img/postgres_top_tables.png)
+
 
 ## Алерты
 ### Алерт входа по SSH
