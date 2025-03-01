@@ -32,6 +32,7 @@
 - [Ссылка на публичный дашборд](https://grafana.story-tech.ru/public-dashboards/58614ae327a4487aa84d6dc0192b7c2a)
 
   Реализовано с помощью [bash-скрипта](./check_volumes.sh), который записывает объем занимаемого дискового пространства контейнерами Jupyter ноутбуков. Данные обновляются каждые 10 минут через cron, собираются с помощью node-exporter, Prometheus и отображаются в Grafana.
+
   Сбор размеров тетрадок и количество строк в них осуществляется отдельным [python скриптом](/notebook-metrics-exporter/notebook-metrics.py), который завернут в отдельный контейнер с помощью [docker compose](/notebook-metrics-exporter/docker-compose.yml) и [dockerfile](/notebook-metrics-exporter/dockerfile)
   
 
